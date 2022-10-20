@@ -7,7 +7,7 @@ namespace TencentHelper;
  *
  * @date       2022-01-06 21:27:15
  */
-class Config extends AbstractConfig
+final class Config extends AbstractConfig
 {
     
 }

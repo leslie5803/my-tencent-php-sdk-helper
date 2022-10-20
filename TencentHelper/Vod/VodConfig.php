@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace TencentHelper\Vod;
 
@@ -21,24 +22,36 @@ final class VodConfig extends AbstractConfig {
      */
     private $URL_ENCODE_KEY = '';
 
-    public function __construct(string $secId = '', string $secKey = '', string $urlKey = '')
-    {
-        $this->SEC_ID = $secId;
-        $this->SEC_KEY = $secKey;
-        $this->URL_ENCODE_KEY = $urlKey;
-    }
+    /**
+     * 子应用ID
+     *
+     * @var string
+     * @date       2022-03-22 16:25:29
+     */
+    private $SUB_APP_ID = 0;
+
+    /**
+     * 临时目录
+     *
+     * @var int
+     * @date 2022-10-09 15:27:52
+     */
+    private $temporary_class = -1;
+
 
     /**
      * 设置URL防盗链key
      *
      * @param string $key
      *
-     * @return void
+     * @return self
      * @date       2022-01-06 14:59:28
      */
-    public function setUrlEncodeKey(string $key)
+    public function setUrlEncodeKey(string $key): self
     {
         $this->URL_ENCODE_KEY = $key;
+
+        return $this;
     }
 
     /**
@@ -50,5 +63,55 @@ final class VodConfig extends AbstractConfig {
     public function getUrlEncodeKey(): string
     {
         return $this->URL_ENCODE_KEY;
+    }
+
+    /**
+     * 获取子应用ID
+     *
+     * @return int
+     * @date       2022-03-22 16:27:49
+     */
+    public function getSubAppId(): int
+    {
+        return $this->SUB_APP_ID;
+    }
+
+    /**
+     * 获取子应用ID
+     *
+     * @param int $id
+     *
+     * @return self
+     * @date       2022-03-22 16:31:28
+     */
+    public function setSubAppId(?int $id): self
+    {
+        $this->SUB_APP_ID = $id;
+
+        return $this;
+    }
+
+    /**
+     * 获取临时目录
+     *
+     * @return int
+     * @date 2022-10-09 15:28:57
+     */
+    public function getTempClass(): int {
+        return $this->temporary_class;
+    }
+
+    /**
+     * 设置临时目录
+     *
+     * @param int $classId
+     *
+     * @return self
+     * @date 2022-10-09 15:29:05
+     */
+    public function setTempClass(int $classId): self {
+        $this->temporary_class = $classId;
+
+        return $this;
     }
 }

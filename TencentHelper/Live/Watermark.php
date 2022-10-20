@@ -36,7 +36,7 @@ final class Watermark extends LiveBase {
 
             return $this->getJson($this->client->DescribeLiveWatermarks($req))['WatermarkList'];
         } catch (TencentCloudSDKException $e){
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -59,12 +59,13 @@ final class Watermark extends LiveBase {
             $req = new AddLiveWatermarkRequest();
 
             $params = $this->watermark($PictureUrl, $XPosition, $YPosition, $yun_width, $yun_height, $name);
+            // \Strings::log($params);
             $params = json_encode($params);
             $req->fromJsonString($params);
 
             return $this->getJson($this->client->AddLiveWatermark($req))['WatermarkId'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -127,7 +128,7 @@ final class Watermark extends LiveBase {
 
             return $this->getJson($this->client->UpdateLiveWatermark($req))['RequestId'];
         } catch(TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -152,7 +153,7 @@ final class Watermark extends LiveBase {
 
             return $this->getJson($this->client->DeleteLiveWatermark($req))['RequestId'];
         } catch(TencentCloudSDKException $e) {
-           throw new \Exception($e, 1);
+           throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -176,7 +177,7 @@ final class Watermark extends LiveBase {
 
             return $this->getJson($this->client->DescribeLiveWatermark($params))['Watermark'];
         } catch (TencentCloudSDKException $e){
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -190,7 +191,7 @@ final class Watermark extends LiveBase {
      * @return string
      * @date       2022-03-09 16:29:03
      */
-    public function bindToStream(string $TemplateId, $AppName = 'live')
+    public function bindToStream(int $TemplateId, $AppName = 'live')
     {
         try{
             $req = new CreateLiveWatermarkRuleRequest();
@@ -198,15 +199,14 @@ final class Watermark extends LiveBase {
                 'DomainName' => $this->config->getPushDomain(),
                 'AppName' => $AppName,
                 'StreamName' => $this->streamName,
-                'TemplateId' => (int)$TemplateId
+                'TemplateId' => $TemplateId
             ];
-            $params = json_encode($params);
 
-            $req->fromJsonString($params);
+            $req->fromJsonString(json_encode($params));
 
             return $this->getJson($this->client->CreateLiveWatermarkRule($req))['RequestId'];
         } catch (TencentCloudSDKException $e){
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -234,7 +234,7 @@ final class Watermark extends LiveBase {
 
             return $this->getJson($this->client->DeleteLiveWatermarkRule($req))['RequestId'];
         } catch (TencentCloudSDKException $e){
-           throw new \Exception($e, 1);
+           throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -250,11 +250,11 @@ final class Watermark extends LiveBase {
         try{
             $req = new DescribeLiveWatermarkRulesRequest();
             $params = [];
-            $params = json_encode($params);
-            $req->fromJsonString($params);
+            $req->fromJsonString(json_encode($params));
+            
             return $this->getJson($this->client->DescribeLiveWatermarkRules($req))['Rules'];
         } catch (TencentCloudSDKException $e){
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 }

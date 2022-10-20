@@ -32,14 +32,15 @@ class Sign
     /**
      * 获取上传签名
      *
-     * @param string $procedure
-     * @param string $sessionContext
-     * @param int $expire
+     * @param string $procedure 任务流名称
+     * @param string $sessionContext 任务流信息传递
+     * @param int $expire 过期时间
+     * @param int $sourceContext 非任务流时信息传递使用
      *
-     * @return void
+     * @return string
      * @date       2022-01-26 20:48:24
      */
-    public function getSignature(string $procedure = '', string $sessionContext = '', int $expire = 86400)
+    public function getSignature(string $procedure = '', string $sessionContext = '', int $expire = 86400, string $sourceContext = '', int $classId = 0)
     {
         // 确定签名的当前时间和失效时间
         $current = time();
@@ -53,6 +54,10 @@ class Sign
             "random"           => rand(),
         );
 
+        if($classId > 0) {
+            $arg_list['classId'] = (int)$classId;
+        }
+
         // 云点播任务流名称
         if (!empty($procedure)) {
             $arg_list['procedure'] = $procedure;
@@ -62,6 +67,11 @@ class Sign
         if (!empty($sessionContext)) {
             $arg_list['sessionContext'] = $sessionContext;
         }
+        if(!empty($sourceContext)) {
+            $arg_list['sourceContext'] = $sourceContext;
+        }
+
+        $arg_list['vodSubAppId'] = $this->config->getSubAppId() ? : 0;
 
         // 计算签名
         $orignal = http_build_query($arg_list);
@@ -72,14 +82,15 @@ class Sign
     /**
      * URL添加防盗链
      *
-     * @param string $url
-     * @param int $expire
+     * @param string $url 视频地址
+     * @param int $expire 过期时间
+     * @param int $exper 免费试看时间
      *
-     * @return void
+     * @return string
      * @date       2022-01-26 20:49:33
      * @link https://cloud.tencent.com/document/product/266/33469
      */
-    public function urlEncode(string $url, int $expire = 864000)
+    public function urlEncode(string $url, int $expire = 864000, int $exper = 0)
     {
         $key  = $this->config->getUrlEncodeKey();
         $path = parse_url($url, PHP_URL_PATH);
@@ -93,9 +104,18 @@ class Sign
         $rlimit = '';
         // 标识
         $us = dechex(microtime(true));
+        $str = $key . $dir . $t;
+        if($exper) {
+            $str .= $exper;
+        }
+        $str .= $us;
         // 签名
-        $sign = md5($key . $dir . $t . $us);
+        $sign = md5($str);
 
+        if($exper) {
+            return $url . '?t=' . $t . '&us=' . $us . '&exper=' . $exper . '&sign=' . $sign;
+        }
+        
         return $url . '?t=' . $t . '&us=' . $us . '&sign=' . $sign;
     }
 }

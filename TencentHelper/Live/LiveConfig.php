@@ -59,6 +59,14 @@ final class LiveConfig extends AbstractConfig {
      */
     private $push_key = '';
 
+    /**
+     * 延迟播放
+     *
+     * @var int
+     * @date       2022-04-07 21:26:54
+     */
+    private $play_delay = 0;
+
 
     /**
      * 设置保留时间
@@ -214,5 +222,31 @@ final class LiveConfig extends AbstractConfig {
     public function getPushKey(): string
     {
         return $this->push_key;
+    }
+
+    /**
+     * 设置延迟播放
+     *
+     * @param int $time
+     *
+     * @return self
+     * @date       2022-04-07 21:28:05
+     */
+    public function setPlayDelay(int $time): self
+    {
+        $this->play_delay = $time;
+
+        return $this;
+    }
+
+    /**
+     * 获取延迟播放
+     *
+     * @return int
+     * @date       2022-04-07 21:28:23
+     */
+    public function getPlayDelay(): int
+    {
+        return $this->play_delay;
     }
 }

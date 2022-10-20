@@ -6,7 +6,9 @@ use TencentCloud\Common\Exception\TencentCloudSDKException;
 use TencentCloud\Live\V20180801\Models\{
     CreateLiveTranscodeRuleRequest,
     CreateLiveTranscodeTemplateRequest,
+    DeleteLiveTranscodeRuleRequest,
     DeleteLiveTranscodeTemplateRequest,
+    DescribeLiveTranscodeRulesRequest,
     DescribeLiveTranscodeTemplateRequest,
     ModifyLiveTranscodeTemplateRequest
 };
@@ -39,7 +41,7 @@ final class Transcode extends LiveBase
      * @return int
      * @date       2022-03-09 16:18:06
      */
-    public function create(
+    public function createTemplate(
         string $name,
         int $VideoBitrate = 0,
         string $Vcodec = 'origin',
@@ -79,7 +81,7 @@ final class Transcode extends LiveBase
 
             return $this->getJson($this->client->CreateLiveTranscodeTemplate($req))['TemplateId'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -104,7 +106,7 @@ final class Transcode extends LiveBase
      * @return string
      * @date       2022-03-09 16:20:22
      */
-    public function modify(
+    public function modifyTemplate(
         int $template_id,
         int $VideoBitrate = 0,
         string $Vcodec = '',
@@ -148,7 +150,7 @@ final class Transcode extends LiveBase
 
             return $this->getJson($this->client->ModifyLiveTranscodeTemplate($req))['RequestId'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -247,7 +249,7 @@ final class Transcode extends LiveBase
      * @return string
      * @date       2022-03-09 16:26:02
      */
-    public function delete($template_id): string
+    public function deleteTemplate($template_id): string
     {
         try {
             $req                  = new DeleteLiveTranscodeTemplateRequest();
@@ -257,7 +259,7 @@ final class Transcode extends LiveBase
 
             return $this->getJson($this->client->DeleteLiveTranscodeTemplate($req))['RequestId'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -281,10 +283,38 @@ final class Transcode extends LiveBase
                 'TemplateId' => intval($TemplateId),
             ];
             $req->fromJsonString(json_encode($params));
-
             return $this->getJson($this->client->CreateLiveTranscodeRule($req))['RequestId'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            \Strings::log($e . '');
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
+        }
+    }
+
+    /**
+     * 删除转码规则
+     *
+     * @param int $TemplateId
+     * @param string $AppName
+     *
+     * @return string
+     * @date       2022-03-17 16:04:05
+     */
+    public function unBindFromStream(int $TemplateId, $AppName = 'live'): string
+    {
+        try {
+            $req    = new DeleteLiveTranscodeRuleRequest();
+            $params = [
+                'DomainName' => $this->config->getPlayDomain(),
+                'AppName'    => $AppName,
+                'StreamName' => $this->streamName,
+                'TemplateId' => $TemplateId,
+            ];
+            $req->fromJsonString(json_encode($params));
+
+            return $this->getJson($this->client->DeleteLiveTranscodeRule($req))['RequestId'];
+        } catch (TencentCloudSDKException $e) {
+            \Strings::log($e . '');
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
 
@@ -296,7 +326,7 @@ final class Transcode extends LiveBase
      * @return array
      * @date       2022-03-09 16:25:00
      */
-    public function get(int $TemplateId)
+    public function getTemplate(int $TemplateId)
     {
         try {
             $req                  = new DescribeLiveTranscodeTemplateRequest();
@@ -306,8 +336,36 @@ final class Transcode extends LiveBase
 
             return $this->getJson($this->client->DescribeLiveTranscodeTemplate($req))['Template'];
         } catch (TencentCloudSDKException $e) {
-            throw new \Exception($e, 1);
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
         }
     }
+
+    /**
+     * 获取转码规则列表
+     *
+     * @param array $ids
+     * @param array $domains
+     *
+     * @return void
+     * @date       2022-03-17 17:59:07
+     */
+    public function rules(array $ids = [], array $domains = [])
+    {
+        try {
+            $req = new DescribeLiveTranscodeRulesRequest();
+
+            $params = array(
+                "TemplateIds" => $ids,
+                "DomainNames" => $domains
+            );
+            $req->fromJsonString(json_encode($params));
+
+            return $this->getJson($this->client->DescribeLiveTranscodeRules($req))['Rules'];
+        } catch (TencentCloudSDKException $e) {
+            throw new \Exception(sprintf('失败原因:%s', $e->__toString()), 1);
+        }
+    }
+
+  
 
 }

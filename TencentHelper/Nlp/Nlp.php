@@ -63,10 +63,10 @@ class Nlp extends AbstractNlp
      * @param [type] $text
      * @param int $num
      *
-     * @return string
+     * @return array
      * @date       2021-12-28 16:10:40
      */
-    public function aiKeywords($text, $num = 5): string
+    public function aiKeywords($text, $num = 5): array
     {
         $req = new KeywordsExtractionRequest();
 
@@ -76,8 +76,7 @@ class Nlp extends AbstractNlp
         ];
         
         $req->fromJsonString(json_encode($params));
-        $resp = $this->client->KeywordsExtraction($req);
 
-        return $resp->toJsonString();
+       return $this->getJson($this->client->KeywordsExtraction($req))['Keywords'];
     }
 }

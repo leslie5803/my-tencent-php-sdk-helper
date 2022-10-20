@@ -56,4 +56,15 @@ class LiveBase extends AbstractLive {
 
         return $this;
     }
+
+    /**
+     * 获取流名称
+     *
+     * @return string
+     * @date       2022-03-16 16:23:50
+     */
+    public function getStreamName(): string
+    {
+        return $this->streamName;
+    }
 }
