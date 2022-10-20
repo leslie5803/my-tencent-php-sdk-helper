@@ -7,8 +7,19 @@ use TencentCloud\Vod\V20180717\Models\CreateAIAnalysisTemplateRequest;
 use TencentCloud\Vod\V20180717\Models\CreateAIRecognitionTemplateRequest;
 use TencentHelper\AbstractVod;
 
+/**
+ * 云点播ai模板管理
+ *
+ * @date 2022-10-20 09:33:15
+ */
 class Template extends AbstractVod {
 
+    /**
+     * 创建ai内容识别模板
+     *
+     * @return void
+     * @date 2022-10-20 09:33:47
+     */
     public function recognition(){
         try {
             $req = new CreateAIRecognitionTemplateRequest();
@@ -52,6 +63,12 @@ class Template extends AbstractVod {
         }
     }
 
+    /**
+     * 创建ai内容分析模板
+     *
+     * @return void
+     * @date 2022-10-20 09:34:09
+     */
     public function analysis(){
         try {
             $req = new CreateAIAnalysisTemplateRequest();

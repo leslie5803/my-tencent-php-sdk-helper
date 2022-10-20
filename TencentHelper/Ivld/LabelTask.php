@@ -8,6 +8,11 @@ use TencentCloud\Ivld\V20210903\Models\DescribeTaskDetailRequest;
 use TencentCloud\Ivld\V20210903\Models\DescribeTasksRequest;
 use TencentHelper\AbstractIvld;
 
+/**
+ * 标签
+ *
+ * @date 2022-10-20 09:38:49
+ */
 class LabelTask extends AbstractIvld {
 
     /**
@@ -54,6 +59,14 @@ class LabelTask extends AbstractIvld {
         }
     }
 
+    /**
+     * 结果
+     *
+     * @param [type] $id
+     *
+     * @return void
+     * @date 2022-10-20 09:39:25
+     */
     public function info($id){
         try {
             $req = new DescribeTaskDetailRequest();
@@ -73,6 +86,14 @@ class LabelTask extends AbstractIvld {
         }
     }
 
+    /**
+     * 批量结果查看
+     *
+     * @param array $names
+     *
+     * @return void
+     * @date 2022-10-20 09:39:32
+     */
     public function batchInfo($names = []){
         try {
             $req = new DescribeTasksRequest();

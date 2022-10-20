@@ -5,6 +5,11 @@ namespace TencentHelper\Sms;
 use TencentCloud\Sms\V20210111\Models\SendSmsRequest;
 use TencentHelper\AbstractSms;
 
+/**
+ * 短信
+ *
+ * @date 2022-10-20 09:35:19
+ */
 class Sms extends AbstractSms {
 
 

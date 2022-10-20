@@ -133,6 +133,14 @@ final class Live extends LiveBase
         return '?txSecret=' . $txSecret . '&txTime=' . $txTime;
     }
 
+    /**
+     * 获取转码流地址
+     *
+     * @param array $template_names
+     *
+     * @return void
+     * @date 2022-10-20 09:36:32
+     */
     public function getTranscodeUrl($template_names = [])
     {
         $domain = $this->config->getPlayDomain();
@@ -146,7 +154,12 @@ final class Live extends LiveBase
         return $urls;
     }
 
-    //云直播延迟播放
+    /**
+     * 云直播延迟播放
+     *
+     * @return void
+     * @date 2022-10-20 09:36:23
+     */
     public function delay()
     {
         try {
@@ -167,7 +180,12 @@ final class Live extends LiveBase
         }
     }
 
-    //查询流状态
+    /**
+     * 查询流状态
+     *
+     * @return void
+     * @date 2022-10-20 09:36:17
+     */
     public function getLiveState()
     {
         try {
